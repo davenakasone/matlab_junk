@@ -1,4 +1,11 @@
 $ cd /usr/local/MATLAB/R2022a/bin
-$ ./matlab
+$ ./matlab -softwareopengl
+
+https://www.mathworks.com/matlabcentral/answers/342906-could-not-initialize-shared-resources-for-x11graphicsdevice
+
+something is not right with the graphics driver
+probably won't be hardware accelaration when plotting
+
+
 
 
