@@ -18,6 +18,7 @@
     15 :  class ex
     16 : class ex
     17 : continue # 16
+    18 : class ex, apr5
 
     rlocus()
     rlocusplot()
@@ -30,7 +31,7 @@ format compact;
 clear;
 close all;
 clc;
-select = 17;
+select = 18;
 
 
 %------------------------------------------------------------------------------------------
@@ -548,6 +549,44 @@ if (select == 17)
     p2 = f_make_vec(-6, known);
     p3 = f_make_vec(-6, known);
     p4 = f_make_vec(-6, known);
+end
+
+
+%------------------------------------------------------------------------------------------
+if (select == 18)
+    syms s;
+    syms K;
+    zeta = -1 * log(0.2) / sqrt(pi^2 + (log(0.2))^2);%0.4559
+    fprintf("\nzeta = %0.3f\n", zeta);
+    
+    settle = 4 / 1.8;
+    fprintf("\nsetting time is:  %0.3f\n", settle);
+    
+    Gs = 1/ (s * (s + 6) * (s + 10));
+    pretty(expand(Gs));
+    my_tf = tf(1, [1, 16, 60, 0]);
+    
+    %{
+    figure('Position', [20, 20, 800, 800]);
+    hold on;
+    grid on;
+    axis equal;
+    %axis padded;
+    rlocus(my_tf);
+    set(findall(gcf,'type','line'),'linewidth',3);
+    set(groot,'defaultLineMarkerSize',15);
+    sgrid;
+    hold off;
+    %}
+    
+    
+   target = -3.588 + 1j*7.003; % to 1/2 the settling time
+   v1 = f_make_vec(0, target);
+   f_mdri("v1", v1, 1);
+   v2 = f_make_vec(-10, target);
+   f_mdri("v2", v2, 1);
+   alpha = -1*pi - angle(v1) - angle(v2);
+   
 end
 
 

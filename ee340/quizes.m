@@ -3,12 +3,13 @@
     2  :  quiz 2, mag circuit
     3  :  quiz 3, transformer
     4  :  quiz 4, transmission line
+    5  :  quiz 5, generator
 %}
 format compact;
 close all;
 clear all;
 clc;
-select = 4;
+select = 5;
 
 
 %-------------------------------------------------------------------------------------
@@ -233,12 +234,27 @@ if select == 4
     use_R = r_load(2);
     p_tot = 3 * Vr_95^2 / use_R;
     fprintf("\nq5,  total power:  %0.3f  MW\n", p_tot/1e6);
+end
+
+
+%-------------------------------------------------------------------------------------
+if select == 5
+    % 3 phase Y-connected synchronous generator
+    % it operates at the rating
+    S_abs_rate = 300e6;
+    pf = 0.8;
+    theta = acos(pf);
+    v_ll = 15e3;
+    z_internal = 0 + 1j*0.2; % ignores armeture resitance
+    P_rate = S_abs_rate * cos(theta);
+    Q_rate = S_abs_rate * sin(theta);
+    S_rate = P_rate + 1j*Q_rate;
+    P_rate_f = P_rate / 3;
+    Q_rate_f = Q_rate / 3;
+    v_f = v_ll / sqrt(3);
     
     
     
- 
-    
-  
 end
 
 
