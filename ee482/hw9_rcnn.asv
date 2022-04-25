@@ -5,14 +5,12 @@ clear;
 img_input = 'visionteam1.jpg'; % change here
 
 
-%data = load('fasterRCNNVehicleTrainingData.mat', 'detector');
-%detector_fastrcnn = data.detector;
-
-data = load('fasterRCNNObjectTrainingData.mat', 'detector');
+% select the model
+data = load('fasterRCNNVehicleTrainingData.mat', 'detector');
 detector_fastrcnn = data.detector;
 
 % Display and inspect the properties of object detector .
-%disp(detector_fastrcnn)
+disp(detector_fastrcnn)
 
 % use analyzeNetwork to display the network architecture and get
 % information about the network layers . The network has two
