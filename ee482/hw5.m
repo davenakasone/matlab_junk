@@ -8,7 +8,13 @@
     7  : problem 2c, HOG, "best", changing window stride, "barcelona-team.jpeg"
     8  : problem 2c, HOG, "best", changing window stride, "SJEarthquakesteampic.jpeg"
     9  : problem 3b, train model, stop signs, 5-stage, mt=1
-
+    10 : problem 3c, Haar
+    11 : problem 3c, HOG
+    12 : problem 3c, LBP
+    13 : problem 3d, YOLOv2
+    14 : problem 3d, ACF
+    15 : problem 3d, fast RCNN
+    16 : problem 3e, train custom
 
     97 : original problem 1 code
         more parameters https ://www.mathworks.com/help/vision/ref/vision.cascadeobjectdetector-system-object.html
@@ -19,7 +25,7 @@ format compact;
 clc;
 close all;
 clear all;
-select = 9;
+select = 66;
 
 
 %------------------------------------------------------------------------------------------
@@ -270,6 +276,380 @@ if select == 8
         release (HOG);
         pause(1);
     end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 97
+%Viola Jones Face Detector
+    % read image
+    I = imread ('visionteam.jpg');
+    MergeThreshold = 4;
+    
+    % create Viola Jones detector
+    VJ = vision.CascadeObjectDetector ('MergeThreshold', MergeThreshold);
+
+    % detect faces
+    tic
+    bboxes = VJ(I);
+    % time detector
+    t_VJ = toc
+
+    % annotate detected faces
+    Ifaces = insertObjectAnnotation (I, 'rectangle', bboxes , 'Face');
+    figure;
+    imshow (Ifaces , []);
+    title ('Viola Jones Face Detector');
+    
+    % clean up
+    release(VJ);
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 98
+%HOG detector
+    % read image
+    I = imread('visionteam.jpg');
+    
+    % increase value when there are too many false positives
+    ClassificationThreshold = 0;
+    
+    % adjust to group multiple responses
+    MergeDetections = false ;
+
+    HOG = vision.PeopleDetector( 'ClassificationThreshold',...
+        ClassificationThreshold , 'MergeDetections', MergeDetections);
+
+    tic
+    [bboxes , scores] = HOG(I);
+    t_HOG = toc
+
+    Iped = insertObjectAnnotation (I,'rectangle', bboxes , scores);
+
+    figure ;
+    imshow (Iped , []);
+    title ('HOG Pedestrian Detector');
+    % notice detections contain area around the person (bounding boxes are not tight)
+    
+    % cleanup
+    release (HOG);
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 9
+    load('stopSignsAndCars.mat');
+    stopSigns = fullfile(toolboxdir('vision'),'visiondata',stopSignsAndCars{:,1});
+    imds = imageDatastore(stopSigns);
+    blds = boxLabelDatastore(stopSignsAndCars(:,2));
+    positiveInstances = combine(imds,blds);
+    imDir = fullfile(matlabroot,'toolbox','vision','visiondata','stopSignImages');
+    addpath(imDir);
+    negativeFolder = fullfile(matlabroot,'toolbox','vision','visiondata','nonStopSigns');
+    negativeImages = imageDatastore(negativeFolder);
+    trainCascadeObjectDetector('stopSignDetector.xml', positiveInstances,...
+        negativeFolder, FalseAlarmRate=0.1, NumCascadeStages=5);
+    detector = vision.CascadeObjectDetector('stopSignDetector.xml', MergeThreshold=1);
+    img = imread('stopSignTest.jpg');
+    bbox = step(detector,img);
+    detectedImg = insertObjectAnnotation(img,'rectangle',bbox,'stop sign');
+    figure;
+    imshow(detectedImg);
+    rmpath(imDir);
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 10
+    load('stopSignsAndCars.mat');
+    stopSigns = fullfile(toolboxdir('vision'),'visiondata',stopSignsAndCars{:,1});
+    imds = imageDatastore(stopSigns);
+    blds = boxLabelDatastore(stopSignsAndCars(:,2));
+    positiveInstances = combine(imds,blds);
+    imDir = fullfile(matlabroot,'toolbox','vision','visiondata','stopSignImages');
+    addpath(imDir);
+    negativeFolder = fullfile(matlabroot,'toolbox','vision','visiondata','nonStopSigns');
+    negativeImages = imageDatastore(negativeFolder);
+    trainCascadeObjectDetector('stopSignDetector.xml', positiveInstances, negativeFolder,...
+        FalseAlarmRate=0.1, NumCascadeStages=5, FeatureType='Haar');
+    detector = vision.CascadeObjectDetector('stopSignDetector.xml', MergeThreshold=4);
+
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        bbox = step(detector,img);
+        detectedImg = insertObjectAnnotation(img,'rectangle',bbox,'stop sign');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('Haar', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+        rmpath(imDir);
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 11
+    load('stopSignsAndCars.mat');
+    stopSigns = fullfile(toolboxdir('vision'),'visiondata',stopSignsAndCars{:,1});
+    imds = imageDatastore(stopSigns);
+    blds = boxLabelDatastore(stopSignsAndCars(:,2));
+    positiveInstances = combine(imds,blds);
+    imDir = fullfile(matlabroot,'toolbox','vision','visiondata','stopSignImages');
+    addpath(imDir);
+    negativeFolder = fullfile(matlabroot,'toolbox','vision','visiondata','nonStopSigns');
+    negativeImages = imageDatastore(negativeFolder);
+    trainCascadeObjectDetector('stopSignDetector.xml', positiveInstances, negativeFolder,...
+        FalseAlarmRate=0.1, NumCascadeStages=30, FeatureType='HOG');
+    detector = vision.CascadeObjectDetector('stopSignDetector.xml', MergeThreshold=8);
+
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        bbox = step(detector,img);
+        detectedImg = insertObjectAnnotation(img,'rectangle',bbox,'stop sign');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('HOG', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+        rmpath(imDir);
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 12
+    load('stopSignsAndCars.mat');
+    stopSigns = fullfile(toolboxdir('vision'),'visiondata',stopSignsAndCars{:,1});
+    imds = imageDatastore(stopSigns);
+    blds = boxLabelDatastore(stopSignsAndCars(:,2));
+    positiveInstances = combine(imds,blds);
+    imDir = fullfile(matlabroot,'toolbox','vision','visiondata','stopSignImages');
+    addpath(imDir);
+    negativeFolder = fullfile(matlabroot,'toolbox','vision','visiondata','nonStopSigns');
+    negativeImages = imageDatastore(negativeFolder);
+    trainCascadeObjectDetector('stopSignDetector.xml', positiveInstances, negativeFolder,...
+        FalseAlarmRate=0.1, NumCascadeStages=22, FeatureType='LBP');
+    detector = vision.CascadeObjectDetector('stopSignDetector.xml', MergeThreshold=4);
+
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        bbox = step(detector,img);
+        detectedImg = insertObjectAnnotation(img,'rectangle',bbox,'stop sign');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('LBP', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+        rmpath(imDir);
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 13
+    detector = vehicleDetectorYOLOv2();
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        [bboxes, scores] = detect(detector, img);
+        detectedImg =... 
+            insertObjectAnnotation(img,'rectangle',bboxes,'vix',...
+            'fontsize', 50,...
+            'LineWidth', 5,...
+            'color', 'yellow');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('YOLOv2', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 14
+    detector = vehicleDetectorACF();
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        [bboxes, scores] = detect(detector, img);
+        detectedImg =... 
+            insertObjectAnnotation(img,'rectangle',bboxes,'vix',...
+            'fontsize', 50,...
+            'LineWidth', 5,...
+            'color', 'cyan');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('ACF', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 15
+    detector = vehicleDetectorFasterRCNN();
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        [bboxes, scores] = detect(detector, img);
+        detectedImg =... 
+            insertObjectAnnotation(img,'rectangle',bboxes,'vix',...
+            'fontsize', 50,...
+            'LineWidth', 5,...
+            'color', 'green');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('Fast RCNN', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+end
+
+
+%------------------------------------------------------------------------------------------
+if select == 16
+    csv_a = readtable("./db_lisa_tiny/annotations.csv");
+    blds = boxLabelDatastore(csv_a);
+    imDir = fullfile("./db_lisa_tiny");
+    addpath(imDir);
+    negativeFolder = fullfile(matlabroot,'toolbox','vision','visiondata','nonStopSigns');
+    negativeImages = imageDatastore(negativeFolder);
+    trainCascadeObjectDetector('stopSignDetector.xml', positiveInstances, negativeFolder,...
+        FalseAlarmRate=0.1, NumCascadeStages=30, FeatureType='HOG');
+    detector = vision.CascadeObjectDetector('stopSignDetector.xml', MergeThreshold=9);
+
+    ptime = zeros(1, 4);
+    for ii = 1:1:4
+        if ii == 1
+            img = imread('s1_dashcam-screen-shot1.jpeg');
+        end
+        if ii == 2
+            img = imread('s2_pedstop.jpeg');
+        end
+        if ii == 3
+            img = imread('s3_jogger.jpeg');
+        end
+        if ii == 4
+            img = imread('s4_four-way-stop-sign-one-way-american-suburb.jpeg');
+        end
+        tic;
+        bbox = step(detector,img);
+        detectedImg = insertObjectAnnotation(img,'rectangle',bbox,'stop sign');
+        ptime(1, ii) = toc;
+        figure(ii);
+        hold on;
+        title('HOG', 'fontsize', 18);
+        imshow(detectedImg);
+        hold off;
+        rmpath(imDir);
+    end
+    for ii = 1:1:4
+        fprintf("processing time, img_%d  :  %0.3f\n", ii, ptime(1,ii));
+    end
+    %
 end
 
 
