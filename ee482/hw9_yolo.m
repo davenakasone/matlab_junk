@@ -2,8 +2,8 @@
 clc;
 close all;
 clear;
-img_input = 'visionteam1.jpg'; % change here
-
+%img_input = 'visionteam1.jpg'; % change here
+img_input = 'highway.jpg';
 
 % Specify the name of a pretrained YOLO v3 deep learning network .
 name = 'tiny-yolov3-coco'; % big: 'darknet53-coco' <> small: 'tiny-yolov3-coco'
@@ -26,9 +26,15 @@ Iyolo = im2single(Iyolo);
 % do detection
 tic;
 [bboxes, scores, labels] = detect(YOLO, Iyolo, 'DetectionPreprocessing', 'none');
-t_yolo = toc;
-fprintf("\nyolov3 on [ %s ]  ,  processing time:  %0.3f seconds\n\n", img_input, t_yolo);
+p_time = toc;
 
 detectedImg = insertObjectAnnotation(Iyolo, 'Rectangle', bboxes, labels);
 figure;
-imshow(detectedImg)
+imshow(detectedImg);
+
+temp = size(bboxes);
+fprintf("\nyolov3 on [ %s ]  ,  detections:  %d\n", img_input, temp(1));
+fprintf("processing time:  %0.3f seconds\n\n", p_time);
+
+
+%%%%~~~~END>
