@@ -1,0 +1,53 @@
+%{
+    quiz3, ch10, ch11
+
+    1  :  p1i
+
+
+    rlocus()
+    rlocusplot()
+    sgrid
+    ngrid
+    step()
+    Control System Designer
+    nyquist()  ...right click and say all margins
+    nicholas()
+    
+    margin()
+    APPS --> control --> linear system analyzer
+    controlSystemDesigner
+%}
+format compact;
+clear;
+close all;
+clc;
+select = 1;
+
+%------------------------------------------------------------------------------------------
+if (select == 1)
+    syms s;
+    syms w;
+    K = 1;
+    Ls = K / (s * (s + 5)^2);
+    tf_Ls = f_Fs_2_tf(Ls);
+
+    
+    a = (-pi/2) - 2*atan(1)
+    %{
+    figure;
+    hold on;
+    axis equal;
+    nyquist(tf_Ls, "g-");
+    set(findall(gcf,'type','line'),'linewidth',2);
+    hold off;
+    %}
+end
+
+
+%------------------------------------------------------------------------------------------
+if (select == 99)
+    
+end
+
+
+%%%%%%%%~~~~~~~~END>

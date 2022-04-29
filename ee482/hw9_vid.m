@@ -30,12 +30,12 @@ index_start = 1;
 index_stop = 9;
 index = [index_start, index_stop];
 frames = read(videoSource, index);
-
+%
 for iFrame = index_start:1:index_stop
   img_out = read(videoSource, iFrame);
   imwrite(img_out, sprintf('dash_%d.jpg', iFrame));
 end 
-
+%}
 for i = index_start:1:index_stop
     frame = frames(:, :, :, i);
 

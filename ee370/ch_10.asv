@@ -6,7 +6,7 @@
     3  :  class ex
     4  :  class ex
     5  :  class ex
-    6  :  quiz, p1, i
+    6  :  quiz, p1
 
     rlocus()
     rlocusplot()
@@ -248,40 +248,16 @@ end
 %------------------------------------------------------------------------------------------
 if (select == 6)
     syms s;
-    K_max = 250;
+    K_max = 100;
     K_min = 0.01;
-    K = 100;
+    K = 1;
     Ls = 1 / (s * (s + 5)^2);
     KLs_max = K_max * Ls;
     KLs_min = K_min * Ls;
     KLs = K * Ls;
-    tf_KL = f_Fs_2_tf(KLs);
-    tf_KL_max = f_Fs_2_tf(KLs_max);
-    tf_KL_min = f_Fs_2_tf(KLs_min);
-
-    figure;
-    hold on;
-    bode(tf_KL_max, "b--");
-    bode(tf_KL_min, "r--");
-    bode(tf_KL, "g-");
-    set(findall(gcf,'type','line'),'linewidth',2);
-    legend("max K", "min K", "K = 100", location='best', fontsize=14);
-    hold off;
-
-    figure;
-    hold on;
-    axis equal;
-    n = 100;
-    theta = linspace(0, 2*pi, n);
-    x = cos(theta);
-    y = sin(theta);
-    nyquist(tf_KL_max, "b--");
-    nyquist(tf_KL_min, "r--");
-    nyquist(tf_KL, "g-");
-    plot(x,y, "k:");
-    set(findall(gcf,'type','line'),'linewidth',2);
-    legend("max K", "min K", "K = 100", location='best', fontsize=14);
-    hold off;
+    tf_LK = f_Fs_2_tf(KLs);
+    tf_LK_min = f_Fs_2_tf(KLs);
+    tf_LK = f_Fs_2_tf(KLs);
 end
 
 
