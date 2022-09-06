@@ -1,0 +1,23 @@
+%{
+    chapter 1, EM
+
+    1   :  ex1.1, plane wave
+
+%}
+clc;
+clear;
+select = 1;
+
+
+if select == 1
+    % plane wave, lossles dielectric medium
+    % E_x = E_0 cos(wt - bz)
+    % f = 5 GHz, wavelength = 3 cm
+    freq = 5e9;
+    lamda = 3e-2;
+    k = 2 * pi / lamda; % first find propogation constant
+    fprintf("propogation constant=  %0.3f")
+
+end
+
+%%%%%%%%~~~~~~~~END>  ch1_ex.m
