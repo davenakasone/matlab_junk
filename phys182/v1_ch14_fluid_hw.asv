@@ -20,7 +20,7 @@
 %}
 clc;
 clear;
-select = 13;
+select = 15;
 
 
 if select == 1
@@ -295,7 +295,7 @@ end
 
 if select == 13
     h = 221; % m    Hoover Dam is this tall
-    P_out = 1300e6; % MW  power output from dam
+    P_out = 680e6; % MW  power output from dam
     depth = 150; % water is taken in at 150 meters
     Q_avg = 650; % m^3/s    average flow rate
     rho_water = 1000; % kg/m^3
@@ -305,7 +305,7 @@ if select == 13
     fprintf("a) P_flow = %0.2f  E8 W\n", P_flow/1e8);
 
     % ratio of input???
-    fprintf("b) try:  %0.3f   ???\n", P_flow/680e6);
+    fprintf("b) try:  %0.3f   ???good!!!\n", P_flow/P_out);
 end
 
 
@@ -314,7 +314,7 @@ end
 
 if select == 14
     % airplane wing should get 1,000N of lift / m^2
-    v_bot = 60; % m/s at take off    ground speed relative to bottom of wing
+    v_bot = 68; % m/s at take off    ground speed relative to bottom of wing
     rho_air = 1.29; % kg/m^3
     p_delta = 1000; % ideal lift...in Pa, or N/m^2
 
@@ -327,7 +327,7 @@ if select == 14
     v_top = sqrt(temp + v_bot^2);
     fprintf("a)  air speed on top of wing is:  %0.1f  m/s\n", v_top);
 
-    v_cruise = 245; % m/s
+    v_cruise = 247; % m/s
     rho_hi = rho_air/4; % reduces 1/4
     temp = (2 * p_delta) / rho_hi;
     v_top = sqrt(temp + v_cruise^2);
@@ -340,7 +340,7 @@ end
 
 if select == 15
   % fill up pipe, at angle
-  theta_deg = 25; % from horizontal...
+  theta_deg = 45; % from horizontal...
   theta_rad = deg2rad(theta_deg); 
   l = 0.55; % m
   Atank_Anoz = 150;  % nozzel cross section area is 150x smaller than tank...
@@ -356,8 +356,8 @@ if select == 15
   fprintf("b)  p_abs =  %0.3f Pa\n", p_abs);
 
   % pluger pulled, and filled
-  p_tank = 0.11 * p_0;  % Pa
-  fill_time = 41;       % s
+  p_tank = 0.16 * p_0;  % Pa
+  fill_time = 48;       % s
   % P1 + (1/2)[rho][v1]^2 + [rho][g][y1] = P2 + (1/2)[rho][v2]^2 + [rho][g][y2]
   % 1== nozzel, 2== tank
   % P1 = P2 + (1/2)[rho]{[v2]^2 - [v1]^2} + [rho][g][y2 - y1]
@@ -365,8 +365,7 @@ if select == 15
   % y2 - y1 = l sin(theta)   ...  depth
   v_noz = v_tank * Atank_Anoz; % use the given ratio, solve   A_tank * v_tank = A_noz * v_noz
   p_noz = p_tank + (1/2) * rho_water * (v_tank^2 - v_noz^2) + rho_water * 9.81 * depth;
-  fprintf("c) pressure at nozzel:  %0.3f Pa\n", p_noz);
-  
+  fprintf("c) pressure at nozzel:  %0.3f Pa  WTF??\n", p_noz);
 end
 
 
