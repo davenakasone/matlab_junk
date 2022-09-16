@@ -1,33 +1,40 @@
 %{
-    1  :  data table
+    lab 21
 %}
 clc;
 close all;
 clear;
 
+f = 120; 
 n_min = 3;
 n_max = 9;
 data_sets = n_max - n_min + 1;
-L_m = 1.3631; % FILL
+rho_s = 1.504e-3; % FILL    kg/m
+L_m = 0.976; % FILL
+%mass_g = [935, 525, 335, 235, 170, 130, 105]; % FILL, exact
+mass_g = [920, 515, 345, 240, 175, 125, 100]; 
+lambda_cm = [90.873, 68.155, 54.524, 45.437, 38.946, 34.078, 30.291]; % FILL
+for ii = 1:1:data_sets
+    %mass_g(1, ii) = ( ( (2 * L_m * f / (ii+2))^2 ) * (rho_s/9.8) ) * 1000;
+    lambda_cm(1, ii) = (2*L_m/(ii+2) ) * 100;
+end
+
+
+
 L_cm = round(L_m * 100, 5, "significant");
-rho_s = 6.83e-4; % FILL    kg/m
-f = 120; % FILL
 fprintf("\nrho_string:  %d  kg/m\n", rho_s);
 fprintf("L = %0.4f m  ,  %0.2f cm\n\n", L_m, L_cm);
 
-
-mass_g = [785, 445, 285, 200, 145, 110, 90]; % FILL
 mass_kg = zeros(1, data_sets);
 
 fprintf("n   |  mass(g)  |   mass(kg)\n");
 fprintf("-----------------------------\n");
 for ii = 1:1:data_sets
     mass_kg(1, ii) = round(mass_g(1, ii) / 1000, 3, "significant");
-    fprintf("%d   |  %3d      |  %0.3f\n", ii+2, mass_g(1, ii), mass_kg(1, ii));
+    fprintf("%d   |  %0.1f    |  %0.3f\n", ii+2, mass_g(1, ii), mass_kg(1, ii));
 end
 
 tension = 9.8 .* mass_kg;
-lambda_cm = [90.873, 68.155, 54.524, 45.437, 38.946, 34.078, 30.291]; % FILL
 lambda_m = lambda_cm ./ 100;
 tension_sqrt = sqrt(tension);
 fprintf("\nT=Mg   |  lam_cm  |  lam_m    |  sqrt(T)\n");

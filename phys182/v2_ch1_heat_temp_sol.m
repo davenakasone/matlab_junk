@@ -1,4 +1,7 @@
 %{
+%L_m = 1.102;
+%rho_s = 6.83e-4;
+%mass_g = [785, 445, 285, 200, 145, 110, 90];
     volume 2, chapter 1, heat and temperature
 
     0   :  try conversions
