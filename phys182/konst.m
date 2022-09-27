@@ -19,9 +19,9 @@ classdef konst
         joule_2_kcal = 1 / 4186;           % 1 kcal is (1/4186) J                               [kcal/J] 
         btu_2_joule = 1055.1;              % 1 BTU has 1055.1 J, 1lb water 1 F\deg              [J/btu]
         joule_2_btu = 1/1055.1;            % 1 J is 1/1055.1 BTU                                [but/J]
-        gas_const_J_mol_K = 8.31;          % ideal gas constant                                 [J/(mol K)]
-        gas_const_cal_mol_K = 1.99;        % ideal gas constant                                 [cal/(mol K)]
-        gas_const_L_atm_mol_K = 0.821;     % ideal gas constant                                 [(L atm)/(mol K)]
+        gas_const_J_mol_K = 8.31;          % ideal gas constant  R                              [J/(mol K)]
+        gas_const_cal_mol_K = 1.99;        % ideal gas constant  R                               [cal/(mol K)]
+        gas_const_L_atm_mol_K = 0.821;     % ideal gas constant  R                              [(L atm)/(mol K)]
     end
     methods (Static)
         function a_circle = area_of_circle(radius)
