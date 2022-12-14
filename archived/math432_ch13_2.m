@@ -10,7 +10,7 @@
 clc; 
 close all;
 clear all;
-selector = 31; % CHANGE HERE
+selector = 29; % CHANGE HERE
 
 %---------------------------------------------------------------------------------------------- 28
 if selector == 28

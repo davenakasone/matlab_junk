@@ -34,10 +34,6 @@ v1n3 = sqrt(2) * (1 - g2*g4) / gden;
 v2n3 = -1 * sqrt(2) * (1 - g1*g4) / gden;
 v3n3 = ((1 - g2*g4)*g1 + (1 - g1*g4)*g2) / gden;
 v4n3 = (g1 - g2) / gden;
-% v1n3 = 0.66;
-% v2n3 = -0.76;
-% v3n3 = 0.55;
-% v4n3 = -0.089;
 
 v3p = sqrt((2 * p_in) / (1 - v3n3^2));
 v3n = v3p * v3n3;
@@ -69,10 +65,10 @@ fprintf("~V4n  =  %9.3f  * ~V3^+  =  %9.3f,  ~V4p=  %9.3f  ,  G4=  %0.2f (%0.2f)
 fprintf("\np_in = %d W = (1/2) * ( |V3p|^2 - |V3n|^2 )  = %0.2f W\n",...
     p_in, 0.5 * (abs(v3p)^2 - abs(v3n)^2));
 
-fprintf("\np1l=  %0.3f W\n", p1l);
-fprintf("p2l=  %0.3f W\n", p2l);
-fprintf("p4l=  %0.3f W\n", p4l);
-fprintf("p3l=  %0.3f W\n\n", p3l);
+fprintf("\nP_1L=  %0.4f W, power supplied to port#1\n", p1l);
+fprintf("P_2L=  %0.4f W, power supplied to port#2\n", p2l);
+fprintf("P_4L=  %0.4f W, power supplied to port#4\n", p4l);
+fprintf("P_3D=  %0.4f W, |P_1L + P_2L + P3L|, power absorbed by port#3\n\n", p3l);
 
 
 end

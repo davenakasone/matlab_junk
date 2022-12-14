@@ -11,7 +11,7 @@
     clc; % nice combo to have
     close all;
     clear all;
-select = 6; % CHANGE ME
+select = 1; % CHANGE ME
 
 % #1 powers of j
 if select == 1
